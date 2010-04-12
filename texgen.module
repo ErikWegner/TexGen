@@ -11,18 +11,16 @@ function texgen_menu() {
     );
 
     $items['texgen/doc'] = array(
-        'title' => t('#1'),
-        'page callback' => 'drupal_get_form',
-        'page arguments' => array('texgen_docgen'),
-        'access callback' => TRUE,
-        'description' => t('Generate complex LaTeX document'),
+        'title' => 'GenForm',
+        'page callback' => 'texgen_docgen',
+        'access arguments' => array('access content'),
         'type' => MENU_DEFAULT_LOCAL_TASK,
     );
 
     return $items;
 }
 
-function texgen_docgen($form_state) {
+function texgen_docgen() {
 
   $form['description'] = array(
     '#type' => 'item',
@@ -33,7 +31,17 @@ function texgen_docgen($form_state) {
     '#type' => 'textfield',
     '#title' => t('Name'),
   );
-  return $form;
+// Adds a simple submit button that refreshes the form and clears its contents -- this is the default behavior for forms.
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => 'Submit',
+  );
+  return drupal_get_form($form);
+  return "<p>A123</p>";
+}
+
+function texgen_submit($form, &$form_state) {
+    return '<p>' . t('Your document') . ' </p>';
 }
 
 function texgen_page() {
