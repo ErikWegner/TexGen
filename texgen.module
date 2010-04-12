@@ -1,1 +1,18 @@
 <?php
+
+function texgen_menu() {
+    $item = array();
+
+    $items['texgen'] = array(
+    'title' => 'LaTeX Generator',
+    'page callback' => 'texgen_page',
+    'access arguments' => array('access content'),
+    'type' => MENU_NORMAL_ITEM,
+   );
+
+  return $items;
+}
+
+function texgen_page() {
+    return '<p>' . t('The quick brown fox jumps over the lazy dog.') . ' </p>';
+}
