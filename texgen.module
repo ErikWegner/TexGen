@@ -20,24 +20,45 @@ function texgen_menu() {
     return $items;
 }
 
-function texgen_docgen() {
+$texgen_data = null;
 
-  $form['description'] = array(
-    '#type' => 'item',
-    '#title' => t('A form with nothing but a textfield'),
-  );
-  // This is the first form element. It's a textfield with a label, "Name"
-  $form['name'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Name'),
-  );
+function texgen_docgenform($formstate) {
+    $form['description'] = array(
+        '#type' => 'item',
+        '#title' => t('A form with nothing but a textfield'),
+    );
+    // This is the first form element. It's a textfield with a label, "Name"
+    $form['name'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Name'),
+    );
 // Adds a simple submit button that refreshes the form and clears its contents -- this is the default behavior for forms.
-  $form['submit'] = array(
-    '#type' => 'submit',
-    '#value' => 'Submit',
-  );
-  return drupal_get_form($form);
-  return "<p>A123</p>";
+    $form['submit'] = array(
+        '#type' => 'submit',
+        '#value' => 'Submit',
+    );
+    return $form;
+}
+
+function texgen_docgenform_submit($form, &$form_state) {
+    global $texgen_data;
+    $texgen_data = array();
+    $texgen_data['name'] = $form_state['values']['name'];
+    drupal_set_message(t('The form has been submitted. ' . $texgen_data['name']));
+}
+
+
+function texgen_docgen() {
+    $r = drupal_get_form('texgen_docgenform');
+    global $texgen_data;
+    $r .= "<h1>D</h1><pre>";
+    $r .= $texgen_data['name'];
+    $r .= "</pre>";
+
+    if (is_array($texgen_data)) {
+        $r = "<p>Success</p>";
+    }
+    return $r;
 }
 
 function texgen_submit($form, &$form_state) {
