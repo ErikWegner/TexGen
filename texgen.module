@@ -11,15 +11,35 @@ function texgen_menu() {
     );
 
     $items['texgen/doc'] = array(
-        'title' => 'GenForm',
+        'title' => t('Document generator'),
         'page callback' => 'drupal_get_form',
         'page arguments' => array('texgen_docgenform'),
         'access arguments' => array('access content'),
-        'type' => MENU_DEFAULT_LOCAL_TASK,
+        'type' => MENU_CALLBACK,
+    );
+
+    $items['texgen/letter'] = array(
+        'title' => t('Letter generator'),
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('texgen_lettergenform'),
+        'access arguments' => array('access content'),
+        'type' => MENU_CALLBACK,
     );
 
     return $items;
 }
+
+function texgen_lettergenform($formstate) {
+    $form['submit'] = array(
+        '#type' => 'submit',
+        '#value' => 'Submit',
+    );
+
+    $form['#redirect'] = 'texgen';
+
+    return $form;
+}
+
 
 function texgen_docgenform($formstate) {
     $form['common'] = array(
@@ -541,6 +561,8 @@ function texgen_docgenform_submit($form, &$form_state) {
 
     global $_SESSION;
     $_SESSION['texgendata'] = $texgenresult;
+
+    drupal_set_message(t('Your document has been created.'));
 }
 
 
@@ -558,7 +580,7 @@ function texgen_page() {
     $r = $_SESSION['texgendata'];
     if (!empty($r)) $r = "<pre>" . $r . "</pre>";
 
-    return '<p>' . l('LaTeX Document', 'texgen/doc') . ' </p>' . $r;
+    return '<p>' . l('LaTeX Document', 'texgen/doc') . ' ' . l('LaTeX Letter', 'texgen/letter') . '</p>' . $r;
 }
 
 
