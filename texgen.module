@@ -181,6 +181,66 @@ function texgen_lettergenform($formstate) {
         '#title' => t('Invoice'),
     );
 
+
+
+
+
+    $form['additions'] = array(
+        '#type' => 'fieldset',
+        '#title' => t('Additional settings'),
+    );
+    $form['additions']['signature'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Signature'),
+        '#desciption' => t('If empty, sender name will be shown')
+    );
+    $form['additions']['ps'] = array(
+        '#type' => 'textarea',
+        '#title' => t('Post scriptum'),
+    );
+    $form['additions']['cc'] = array(
+        '#type' => 'textarea',
+        '#title' => t('Mailling list'),
+        '#description' => t('Separate entries with double back slashes: \\\\')
+    );
+    $form['additions']['encl'] = array(
+        '#type' => 'textarea',
+        '#title' => t('Enclosures'),
+        '#description' => t('Separate entries with double back slashes: \\\\')
+    );
+    $form['additions']['parskip'] = array(
+        '#type' => 'select',
+        '#title' => t('Paragraph skip'),
+        '#options' => array(
+            'off' => t('Indent, do not skip'),
+            'full' => t('No indent, skip one line, at least 1em space on last paragraph line'),
+            'full*' => t('No indent, skip one line, at least one quarter space on last paragraph line'),
+            'full+' => t('No indent, skip one line, at least one third on last paragraph line'),
+            'full-' => t('No indent, skip one line, last paragraph line can have any length'),
+            'half' => t('No indent, skip half a line, at least 1em space on last paragraph line'),
+            'half*' => t('No indent, skip half a line, at least one quarter space on last paragraph line'),
+            'half+' => t('No indent, skip half a line, at least one third on last paragraph line'),
+            'half-' => t('No indent, skip half a line, last paragraph line can have any length'),
+        ),
+        '#default_value' => 'full'
+    );
+
+    $form['additions']['schriftart'] = array(
+        '#type' => 'select',
+        '#title' => t('Font'),
+        '#options' => array(
+            'libertine' => 'Libertine',
+            'palatino' => 'Palatino',
+            'times' => 'Times',
+            'chancery' => 'Zapf Chancery',
+            'bookman' => 'Bookman',
+            'newcent' => 'New Century Schoolbook',
+            'charter' => 'Charter',
+            'lmodern' => 'Latin Modern',
+            'bera' => 'Bera',
+        ),
+    );
+
     $form['submit'] = array(
         '#type' => 'submit',
         '#value' => 'Submit',
