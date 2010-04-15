@@ -146,6 +146,105 @@ function texgen_docgenform($formstate) {
 
 
 
+    $form['pdfdocinfo'] = array(
+        '#type' => 'fieldset',
+        '#title' => t('PDF document information and settings'),
+    );
+
+    $form['pdfdocinfo']['pdfhyperref'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Use package hyperref'),
+        '#value' => '1'
+    );
+
+    $form['pdfdocinfo']['pdfdraft'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Always generate pdf settings (draft=false)'),
+        '#value' => '1'
+    );
+
+    $form['pdfdocinfo']['pdfbookmarks'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Generate bookmarks'),
+        '#value' => '1'
+    );
+
+    $form['pdfdocinfo']['pdfbookmarksnum'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Include section numbers in bookmarks'),
+        '#value' => '1'
+    );
+
+    $form['pdfdocinfo']['pdfbookmarksopen'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Bookmarks panel opened by default'),
+        '#value' => '1'
+    );
+
+    $form['pdfdocinfo']['pdfcolorlinks'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Colour pdf links'),
+        '#value' => '1'
+    );
+
+    $form['pdfdocinfo']['pdfauthor'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Author'),
+    );
+
+    $form['pdfdocinfo']['pdftitle'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Title'),
+    );
+
+    $form['pdfdocinfo']['pdfsubject'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Subject'),
+    );
+
+    $form['pdfdocinfo']['pdfkeywords'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Keywords'),
+    );
+
+    $form['pdfdocinfo']['pdfpagemode'] = array(
+        '#type' => 'select',
+        '#title' => t('Page mode'),
+        '#options' => array(
+            '1' => t('No setting'),
+            '2' => t('Thumbnails opened'),
+            '3' => t('Bookmarks opened'),
+            '4' => t('Fullscreen'),
+        ),
+        '#default_value' => '3',
+    );
+
+    $form['pdfdocinfo']['pdfstartview'] = array(
+        '#type' => 'select',
+        '#title' => t('Page mode'),
+        '#options' => array(
+            '1' => t('No setting'),
+            '2' => t('Fit page'),
+            '3' => t('Fit page width'),
+            '4' => t('Fit page contents'),
+            '5' => t('Fit page contents width'),
+        ),
+        '#default_value' => '2',
+    );
+
+    $form['pdfdocinfo']['pdfview'] = array(
+        '#type' => 'select',
+        '#title' => t('Page mode when following internal links'),
+        '#options' => array(
+            '1' => t('No setting'),
+            '2' => t('Fit page'),
+            '3' => t('Fit page width'),
+            '4' => t('Fit page contents'),
+            '5' => t('Fit page contents width'),
+        ),
+        '#default_value' => '5',
+    );
+
     $form['submit'] = array(
         '#type' => 'submit',
         '#value' => 'Submit',
