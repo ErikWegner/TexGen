@@ -143,6 +143,44 @@ function texgen_lettergenform($formstate) {
         '#default_value' => t('Dear Sir or Madame,')
     );
 
+
+
+
+    $form['businessline'] = array(
+        '#type' => 'fieldset',
+        '#title' => t('Business line'),
+    );
+    $form['businessline']['place'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Place'),
+        '#description' => t('Place is put before the date')
+    );
+    $form['businessline']['date'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Date'),
+        '#description' => t('If empty, today will be used')
+    );
+    $form['businessline']['myref'] = array(
+        '#type' => 'textfield',
+        '#title' => t('My reference'),
+    );
+    $form['businessline']['yourref'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Your reference'),
+    );
+    $form['businessline']['yourmail'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Your mail'),
+    );
+    $form['businessline']['customer'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Customer'),
+    );
+    $form['businessline']['invoice'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Invoice'),
+    );
+
     $form['submit'] = array(
         '#type' => 'submit',
         '#value' => 'Submit',
