@@ -112,6 +112,40 @@ function texgen_docgenform($formstate) {
         '#description' => t('E.g. \headmark to show the current section.'),
     );
 
+    $form['headfoottitle']['ifoot'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Inner or left footer text'),
+        '#description' => t('E.g. \tiny Your name.'),
+    );
+
+    $form['headfoottitle']['cfoot'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Centered footer text'),
+    );
+
+    $form['headfoottitle']['ofoot'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Outer or right footer text'),
+        '#description' => t('E.g. \pagemark  to show the current page number.'),
+    );
+
+    $form['headfoottitle']['titletext'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Title page heading'),
+    );
+
+    $form['headfoottitle']['titleautor'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Author'),
+    );
+
+    $form['headfoottitle']['textzusammenfassung'] = array(
+        '#type' => 'textarea',
+        '#title' => t('Abstract'),
+    );
+
+
+
     $form['submit'] = array(
         '#type' => 'submit',
         '#value' => 'Submit',
