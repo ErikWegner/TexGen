@@ -776,17 +776,6 @@ function texgen_docgenform_submit($form, &$form_state) {
     drupal_set_message(t('Your document has been created.'));
 }
 
-
-function texgen_docgen() {
-    $r = drupal_get_form('texgen_docgenform');
-
-    return $r;
-}
-
-function texgen_submit($form, &$form_state) {
-    return '<p>' . t('Your document') . ' </p>';
-}
-
 function texgen_page() {
     $r = $_SESSION['texgendata'];
     if (!empty($r)) $r = "<pre>" . $r . "</pre>";
@@ -894,4 +883,133 @@ $com\usepackage{courier}
 
 function texgen_xhtmlchars($text) {
 	return str_replace("'", "&apos;", str_replace("\"", "&quot;", str_replace(">", "&gt;", str_replace("<", "&lt;", str_replace("&", "&amp;", $text)))));
+}
+
+function texgen_cmdKomavar($varname, $indent, $values) {
+        return texgen_commandIfVar("setkomavar{{$varname}}", $varname, $indent, $values);
+}
+
+function texgen_commandIfVar($command, $postvar, $indent, $values) {
+        return str_repeat(" ", $indent) . (strlen($values[$postvar]) == 0 ? '%' : '') . "\\$command{" . texgen_xhtmlchars($values[$postvar]) . "}\n";
+}
+
+function texgen_lettergenform_submit($form, &$form_state) {
+	$seite = '\documentclass[
+  footsepline,
+  DIN,
+  draft=false,
+  paper=a4,
+  fontsize=11pt,
+  ';
+
+	$seite .= 'parskip=' . (ereg('^(full)|(half)[\+\*\-]?$', $form_state['values']['parskip']) ? $form_state['values']['parskip'] : 'off' ) . ', %Einzug (off) oder Abstand((full)|(half)[\+\*\-]?)
+  ';
+
+	$seite .= 'fromphone=' . ($form_state['values']['swfromphone'] == 'on' ? 'on' : 'off') . ', %Telefonnummer des Absenders setzen (true/false)
+  ';
+
+	$seite .= 'fromfax=' . ($form_state['values']['swfromfax'] == 'on' ? 'on' : 'off') . ', %Faxnummer des Absenders setzen (true/false)
+  ';
+
+	$seite .= 'fromemail=' . ($form_state['values']['swfromemail'] == 'on' ? 'on' : 'off') . ', %E-Mailadresse des Absenders setzen (true/false)
+  ';
+
+	$seite .= 'fromurl=' . ($form_state['values']['swfromurl'] == 'on' ? 'on' : 'off') . ', %Internetadresse des Absenders setzen (true/false)
+  ';
+
+	switch($form_state['values']['swfromrule']) {
+		case 'aftername' : $swfromrule = "aftername"; break;
+		case 'afteraddress' : $swfromrule = "afteraddress"; break;
+		default : $swfromrule = "off";
+	}
+	$seite .= 'fromrule=' . $swfromrule . ', %Linie bei Absender setzen (off/aftername/afteraddress)
+  ';
+
+	$seite .= 'pdftex,
+  pagenumber=false,
+  footsepline=false]{scrlttr2}
+
+%Zusätzliche Pakete
+\usepackage[utf8]{inputenc} % Encoding der TeX-Dateien:
+% latin1 = Windows,
+% ansi = Linux alt,
+% utf8 = Linux aktuell
+\usepackage[T1]{fontenc} % Aktiviert EC-Schriftarten
+\usepackage{ae} % Schöne Schriften für PDF-Dateien
+\usepackage{textcomp} % Text-Companion-Symbols (z. B. \texteuro)
+\usepackage{ngerman} % Deutsche Einstellungen
+';
+
+$seite .= texgen_fontselect($form_state['values']['schriftart']);
+
+$seite .= '
+
+\usepackage{marvosym} % Symbole und das Euro-Zeichen \EUR
+\usepackage{eurosym} % Euro-Zeichen nach offz. Vorgaben, Geld durch \EUR{100,00}
+\usepackage{microtype} % Mikrotypographische Anpassungen für pdflatex
+\usepackage{fixltx2e} % korrigiert LaTeX-Fehler
+
+%wenn gewünscht, kann Hyperref aktiviert werden:
+%\usepackage[pdftex, a4paper, bookmarks=false, bookmarksopen=false, bookmarksnumbered=true, pdfauthor={Autor}, pdftitle={Titel}, colorlinks,linkcolor=black, urlcolor=blue,pdfstartview=FitH]{hyperref}
+
+%eventuell mehr Platz auf dem Papier schaffen
+%\areaset[0mm]{17cm}{27cm}
+%oder so
+%\enlargethispage{2\baselineskip}
+
+\LoadLetterOption{DIN}
+
+%%Dieses Kommando setzt um den übergebenen Parameter
+%%deutsche doppelte Anführungszeichen
+\newcommand{\gdq}[1]{\glqq{}#1\grqq{}}
+
+\begin{document}
+  \setkomavar*{enclseparator}{Anlagen}
+  \setkomavar{fromname}{' . texgen_xhtmlchars($form_state['values']['fromname']) . '}
+  \setkomavar{fromaddress}{' . texgen_xhtmlchars(str_replace("\n", "\\\\ %\n    ", str_replace("\r","", $form_state['values']['fromaddress']))) . "}\n" .
+	texgen_cmdKomavar("fromemail", 2, $form_state['values']) .
+	texgen_cmdKomavar("fromurl", 2, $form_state['values']) .
+	texgen_cmdKomavar("fromphone", 2, $form_state['values']) .
+	texgen_cmdKomavar("fromfax", 2, $form_state['values']) .
+	texgen_cmdKomavar("subject", 2, $form_state['values']) .
+	"\n% Geschäftszeile\n" .
+	texgen_cmdKomavar("place", 2, $form_state['values']) .
+	texgen_cmdKomavar("date", 2, $form_state['values']) .
+	texgen_cmdKomavar("myref", 2, $form_state['values']) .
+	texgen_cmdKomavar("yourref", 2, $form_state['values']) .
+	texgen_cmdKomavar("yourmail", 2, $form_state['values']) .
+	texgen_cmdKomavar("customer", 2, $form_state['values']) .
+	texgen_cmdKomavar("invoice", 2, $form_state['values']) .
+ "\n".
+	texgen_cmdKomavar("title", 2, $form_state['values']) .
+'  \renewcommand*{\raggedsignature}{} % Unterschrift wird nicht eingezogen
+
+  \begin{letter}{'.str_replace("\r", "", str_replace("\n","\\\\ %\n    ", texgen_xhtmlchars($form_state['values']['empf']))).'}
+
+    \opening{'.texgen_xhtmlchars($form_state['values']['opening']).'}
+    Brieftext
+    \closing{Mit freundlichen Grüßen}
+
+    %eine Unterschrift als Grafikdatei
+    %\makeatletter
+    %\@setplength{sigbeforevskip}{0\baselineskip}
+    %\makeatother
+    %\vskip -2.3cm
+    %\includegraphics{unterschrift.png}
+    %\vskip 2ex
+
+    %Nachsatz (PS)
+    ' . (strlen($form_state['values']['ps']) == 0 ? '%' : '') . '\ps
+' . (strlen($form_state['values']['ps']) == 0 ? '' : $form_state['values']['ps']) .
+"    %Anlagen\n" .
+texgen_commandIfVar("encl", "encl", 4, $form_state['values']) .
+"    %Verteiler\n" .
+texgen_commandIfVar("cc", "cc", 4, $form_state['values']) .
+'  \end{letter}
+\end{document}';
+	 $seite .= '</pre>';
+    global $_SESSION;
+    $_SESSION['texgendata'] = $seite;
+
+    drupal_set_message(t('Your document has been created.'));
 }
