@@ -331,15 +331,15 @@ function texgen_docgenform_submit($form, &$form_state) {
 %\usepackage[square]{natbib} % Literaturverzeichnis
 ';
 
-    if ($form_state['values']['pdfhyperref'] == "true") {
+    if ($form_state['values']['pdfhyperref'] == "1") {
         $texgenresult .= "% PDF-Optionen, PDF-Hyperlinks\n\usepackage[";
         if ($form_state['values']['pdfdraft'] == "false") $texgenresult .= "draft=false, %\n  ";
-        if ($form_state['values']['pdfbookmarks'] == "true") {
+        if ($form_state['values']['pdfbookmarks'] == "1") {
             $texgenresult .= 'bookmarks=true, ';
-            if ($form_state['values']['pdfbookmarksnum'] == "true") $texgenresult .= 'bookmarksnumbered=true, ';
-            if ($form_state['values']['pdfbookmarksopen'] == "true") $texgenresult .= "bookmarksopen=true, %\n  ";
+            if ($form_state['values']['pdfbookmarksnum'] == "1") $texgenresult .= 'bookmarksnumbered=true, ';
+            if ($form_state['values']['pdfbookmarksopen'] == "1") $texgenresult .= "bookmarksopen=true, %\n  ";
         }
-        if ($form_state['values']['pdfcolorlinks'] == "true") $texgenresult .= "colorlinks, linkcolor=blue, urlcolor=blue, %\n  ";
+        if ($form_state['values']['pdfcolorlinks'] == "1") $texgenresult .= "colorlinks, linkcolor=blue, urlcolor=blue, %\n  ";
 
 
         if ($form_state['values']['pdfauthor'] != "") $texgenresult .= 'pdfauthor={' . stripslashes(texgen_xhtmlchars($form_state['values']['pdfauthor'])). '}, ';
