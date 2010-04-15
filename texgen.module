@@ -22,16 +22,36 @@ function texgen_menu() {
 }
 
 function texgen_docgenform($formstate) {
-    $form['description'] = array(
-        '#type' => 'item',
-        '#title' => t('A form with nothing but a textfield'),
+    $form['common'] = array(
+        '#type' => 'fieldset',
+        '#title' => t('Common settings'),
     );
-    // This is the first form element. It's a textfield with a label, "Name"
-    $form['name'] = array(
-        '#type' => 'textfield',
-        '#title' => t('Name'),
+
+    $form['common']['duplex'] = array(
+        '#type' => 'radios',
+        '#title' => t('Duplex document'),
+        '#options' => array('yes'=>t('Yes'),'no'=>t('No')),
+        '#default_value' => 'yes',
     );
-// Adds a simple submit button that refreshes the form and clears its contents -- this is the default behavior for forms.
+
+    $form['common']['makeidx'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Generate index'),
+        '#value' => '1'
+    );
+
+    $form['common']['makeglossar'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Generate glossary'),
+        '#value' => '1'
+    );
+
+    $form['common']['makebiblio'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Generate bibliography'),
+        '#value' => '1'
+    );
+
     $form['submit'] = array(
         '#type' => 'submit',
         '#value' => 'Submit',
@@ -43,14 +63,297 @@ function texgen_docgenform($formstate) {
 }
 
 function texgen_docgenform_submit($form, &$form_state) {
+    $texgenresult = '';
+    
+    $generaldokopts = '  idxtotoc,   % Index soll im Inhaltsverzeichnis stehen
+% liststotoc, % Abbildungs- und Tabellenverzeichnis sollen im Inhaltsverzeichnis stehen
+% bibtotoc,   % Literaturverzeichnis soll im Inhaltsverzeichnis stehen
+  tocleft,    % Inhaltsverzeichnis nicht einrücken
+% chapterprefix, % »Kapitel« vor Kapitelnummer ausgeben (nur scrreprt und scrbook)
+% appendixprefix, % »Anhang« vor Anhangsnummer ausgeben
+  a4paper,    % Papiergröße A4
+  abstracton, % Zusammenfassung aktivieren
+  titlepage,  % Eine Titelseite erstellen
+' . ( $form_state['values']['duplex'] == "yes" ? " " : "%") . " twoside,    % zweiseitiges Layout
+" . ( $form_state['values']['duplex'] == "no" ? " " : "%") . " oneside,    % einseitiges Layout
+  DIVcalc
+";
+
+    $texgenresult .= "%\listfiles % für Fehlersuche\n% Dokumentenklasse und Optionen\n";
+    $texgenresult .= '\documentclass[
+  final,      % endgültige Fassung
+% draft,      % Vorschau
+' . $generaldokopts. ']{scrartcl} ';
+
+    $texgenresult .= texgen_seps("Pakete einbinden");
+
+    if ($form_state['values']['makeidx'] == "yes") $texgenresult .= '
+\usepackage{makeidx} % Paket zur Indexerzeugung
+\makeindex % Indexerzeugung aktivieren';
+
+    $texgenresult .= "\n".($form_state['values']['makeglossar'] == "yes" ? "" : "%") . "\usepackage[style=altlist,toc=true,hyper=true,number=none]{glossary} % Paket für Glossar\n";
+    $texgenresult .= ($form_state['values']['makeglossar'] == "yes" ? "" : "%") . "\makeglossary % Glossarerzeugung aktivieren\n";
+    $texgenresult .= "%Glossareinträge an der jeweiligen Textstelle mit:
+% \glossary{
+%   name={Computer},
+%   description={Eine Maschine zur Lösung von Problemen,
+%     die es ohne diese Maschine nicht gäbe.}
+% }\n";
+    $texgenresult .= "%Erstellung des Glossars mit makeindex:
+%makeindex -s dateiname.ist -t dateiname.glg -o dateiname.gls dateiname.glo\n";
+
+    $texgenresult .= '
+\usepackage[headsepline,footsepline]{scrpage2} % Kopf- und Fußzeile
+\usepackage[utf8]{inputenc} % Encoding der TeX-Dateien:
+% latin1 = Windows,
+% ansi = Linux alt,
+% utf8 = Linux aktuell
+\usepackage[T1]{fontenc} % Aktiviert EC-Schriftarten
+\usepackage{ae} % Schöne Schriften für PDF-Dateien
+\usepackage{textcomp} % Text-Companion-Symbols (z. B. \texteuro)
+\usepackage[ngerman]{babel} % Deutsche Einstellungen
+%Paket times ist veraltet, siehe
+% http://www.ctan.org/tex-archive/info/german/l2tabu/l2tabu.pdf
+% \usepackage{times} % Times-Schriftart auswählen
+';
+
+    $texgenresult .= texgen_fontselect($form_state['values']['schriftart']);
+
+    $texgenresult .= '
+\usepackage{marvosym} % Symbole und das Euro-Zeichen \EUR
+\usepackage{eurosym} % Euro-Zeichen nach offz. Vorgaben, Geld durch \EUR{100,00}
+\usepackage[final]{microtype} % Mikrotypographische Anpassungen
+\usepackage{fixltx2e} % korrigiert LaTeX-Fehler
+%\usepackage{mparhack} % wenn verfügbar, korrigiert Fehler bei marginpar-Befehl
+\usepackage{color,graphics,graphicx} % Unterstützung für Grafiken und Farben
+\usepackage{picins} % Text umfließt Grafiken
+%\usepackage{eso-pic} % nur falls Entwurf-Seitenhintergrund
+% \usepackage{url} % nur falls kein hyperref-Paket genutzt wird
+% \usepackage{longtable} % für Tabellen über mehrere Seiten
+% \usepackage{fancyvrb} % für verbatiminput
+% \usepackage{listings} % Quelltexte formatiert ausgeben
+\usepackage{booktabs} % Tabellenformatierungsbefehle top-/mid-/bottomrule
+\usepackage{caption}
+%\usepackage[ngerman]{varioref} % variable Referenzen
+%\usepackage[square]{natbib} % Literaturverzeichnis
+';
+
+    if ($form_state['values']['pdfhyperref'] == "true") {
+        $texgenresult .= "% PDF-Optionen, PDF-Hyperlinks\n\usepackage[";
+        if ($form_state['values']['pdfdraft'] == "false") $texgenresult .= "draft=false, %\n  ";
+        if ($form_state['values']['pdfbookmarks'] == "true") {
+            $texgenresult .= 'bookmarks=true, ';
+            if ($form_state['values']['pdfbookmarksnum'] == "true") $texgenresult .= 'bookmarksnumbered=true, ';
+            if ($form_state['values']['pdfbookmarksopen'] == "true") $texgenresult .= "bookmarksopen=true, %\n  ";
+        }
+        if ($form_state['values']['pdfcolorlinks'] == "true") $texgenresult .= "colorlinks, linkcolor=blue, urlcolor=blue, %\n  ";
+
+
+        if ($form_state['values']['pdfauthor'] != "") $texgenresult .= 'pdfauthor={' . stripslashes(texgen_xhtmlchars($form_state['values']['pdfauthor'])). '}, ';
+        if ($form_state['values']['pdftitle'] != "") $texgenresult .= 'pdftitle={' . stripslashes(texgen_xhtmlchars($form_state['values']['pdftitle'])). '}, ';
+        if ($form_state['values']['pdfsubject'] != "") $texgenresult .= 'pdfsubject={' . stripslashes(texgen_xhtmlchars($form_state['values']['pdfsubject'])). '}, ';
+        if ($form_state['values']['pdfkeywords'] != "") $texgenresult .= 'pdfkeywords={' . stripslashes(texgen_xhtmlchars($form_state['values']['pdfkeywords'])). '}, ';
+
+        switch ($form_state['values']['pdfpagemode']) {
+            case 2 : $texgenresult .= 'pdfpagemode=UseThumbs, ';
+                break;
+            case 3 : $texgenresult .= 'pdfpagemode=UseOutlines, ';
+                break;
+            case 4 : $texgenresult .= 'pdfpagemode=FullScreen, ';
+                break;
+        }
+
+        switch ($form_state['values']['pdfstartview']) {
+            case 2 : $texgenresult .= 'pdfstartview=Fit, ';
+                break;
+            case 3 : $texgenresult .= 'pdfstartview=FitH, ';
+                break;
+            case 4 : $texgenresult .= 'pdfstartview=FitB, ';
+                break;
+            case 5 : $texgenresult .= 'pdfstartview=FitBH, ';
+                break;
+        }
+
+        switch ($form_state['values']['pdfview']) {
+            case 2 : $texgenresult .= 'pdfview=Fit, ';
+                break;
+            case 3 : $texgenresult .= 'pdfview=FitH, ';
+                break;
+            case 4 : $texgenresult .= 'pdfview=FitB, ';
+                break;
+            case 5 : $texgenresult .= 'pdfview=FitBH, ';
+                break;
+        }
+
+        $texgenresult .= 'a4paper]{hyperref}
+\usepackage[all]{hypcap} %Klicken auf Verweise rückt Ziel in den Mittelpunkt
+%\usepackage{pdfcolmk} %bei Problemen mit Farben beim Seitenwechsel';
+    }
+
+    $texgenresult .= '
+
+%veraltete Pakete, die nicht mehr benötigt werden
+%t1enc = ersetzt durch fontenc
+%times = ersetzt durch mathptmx
+%a4    = ersetzt durch Klassenoption a4paper';
+
+    if ($form_state['values']['newcommands'] == "yes") {
+        $texgenresult .= texgen_seps("Standardbefehle für \\newcommand");
+        $texgenresult .= '
+%%Dieses Kommando trennt die einzelnen Dokumentenabschnitte
+%%wahlweise eine neue Seite
+\newcommand{\ABSCHNITTSTRENNER}{\cleardoublepage }';
+
+        $texgenresult .= '
+%%Dieses Kommando setzt einen Backslash,
+%%an dem ohne ein Trennzeichen getrennt werden kann
+\newcommand{\trennBS}{\texttt{\char92}" "}';
+
+        $texgenresult .= '
+
+%Einstellungen für Abbildungsbeschriftungen
+\captionsetup{margin=10pt,font=small,labelfont=bf,position=bottom}
+
+%%Dieses Kommando setzt um den übergebenen Parameter
+%%deutsche doppelte Anführungszeichen
+\newcommand{\gdq}[1]{\glqq{}#1\grqq{}}
+';
+
+        $texgenresult .= "
+%%Dieses Kommando setzt um den übergebenen Parameter
+%%französische Anführungszeichen (innen, außen, einfach, doppelt)\n";
+        $texgenresult .= "\\newcommand{\\fqi}[1]{\\frq#1\\flq}                 % Anführungsz. einfach\n";
+        $texgenresult .= "\\newcommand{\\fqqi}[1]{\\frqq#1\\flqq}              % Anführungsz. doppelt\n";
+        $texgenresult .= "\\newcommand{\\fqa}[1]{\\flq#1\\frq}                 % Anführungsz. einfach\n";
+        $texgenresult .= "\\newcommand{\\fqqa}[1]{\\flqq#1\\frqq}              % Anführungsz. doppelt\n";
+        $texgenresult .= "
+%enquote-Befehl für alle Anführungszeichen verwenden,
+%dann kann schnell eine andere Formatierung genutzt werden
+%\\newcommand{\\enquote}[1]{\\fqqi{#1}}              % diese Anf.zeichen nutzen
+\\usepackage[babel,german=guillemets]{csquotes} % falls Paket nicht vorhanden, vorherige Zeile aktivieren\n\n";
+
+
+        $texgenresult .= '%%Ein Platzhalter für Daten, die später ergänzt werden
+\usepackage[margin,ngerman]{fixme}
+\newcommand{\weissnicht}{XX?\-XX?\-XX?\-XX\fixme{Hier fehlt was!}}
+';
+
+        $texgenresult .= '
+%%Der Parameter erscheint im Text und im Index
+\newcommand{\textindex}[1]{#1\index{#1}}';
+    }
+
+    if ($form_state['values']['definecolors'] == "yes") {
+        $texgenresult .= texgen_seps("Standardfarben definieren");
+        $texgenresult .= "\\definecolor{gruen}{rgb}{0.0,1.0,0.0}\n";
+        $texgenresult .= "\\definecolor{gelb}{rgb}{1.0,1.0,0.0}\n";
+        $texgenresult .= "\\definecolor{weiss}{rgb}{1.0,1.0,1.0}\n";
+        $texgenresult .= "\\definecolor{schwarz}{rgb}{0.0,0.0,0.0}\n";
+        $texgenresult .= "\\definecolor{rot}{rgb}{1.0,0.0,0.0}\n";
+    }
+
+    $texgenresult .= texgen_seps("Kopf- und Fußzeile definieren");
+    $texgenresult .= '\manualmark % Manuelle Einstellungen anschalten
+\pagestyle{scrheadings}
+\ihead{%\includegraphics[height=2ex,draft=false]{zusatz/logo}
+' . stripslashes(texgen_xhtmlchars($form_state['values']['ihead'])). '}
+\chead{' . stripslashes(texgen_xhtmlchars($form_state['values']['chead'])). '}
+\ohead{' . stripslashes(texgen_xhtmlchars($form_state['values']['ohead'])). '}
+
+\ifoot{' . stripslashes(texgen_xhtmlchars($form_state['values']['ifoot'])). '}
+\cfoot{' . stripslashes(texgen_xhtmlchars($form_state['values']['cfoot'])). '}
+\ofoot{' . stripslashes(texgen_xhtmlchars($form_state['values']['ofoot'])). '}
+
+% Eine Seite ohne Kopf- und Fußzeile
+\defpagestyle{plainwfl}{(0pt,0pt){} {} {}(0pt,0pt)}{(0pt,0pt){} {} {}(0pt,0pt)}
+';
+
+    $texgenresult .= "\n%%Unterste Zeile\n";
+    $texgenresult .= ( $form_state['values']['bottomfill'] == "flushbottom" ? "" : "%") . "\\flushbottom % gleiche Höhe, elastische vertikale Abstände\n";
+    $texgenresult .= ( $form_state['values']['bottomfill'] == "raggedbottom" ? "" : "%") . "\\raggedbottom % wechselnde Höhe, konstante vertikale Abstände\n\n";
+
+    $texgenresult .= '\begin{document}';
+    $texgenresult .= texgen_seps("Befehle für die Titelseite");
+    $texgenresult .= '\title{
+%\includegraphics[scale=1.0]{zusatz/logo_a} \\\\
+' . stripslashes(texgen_xhtmlchars($form_state['values']['titletext'])). '
+%\includegraphics[draft=false,scale=0.333]{zusatz/logo_a}
+}
+\author{' . stripslashes(texgen_xhtmlchars($form_state['values']['titleautor'])). '}
+%Datum wird automatisch eingefügt
+\pdfbookmark[1]{Titelseite}{titel}
+\maketitle
+\thispagestyle{plainwfl}
+
+\mbox{}
+
+\vfill
+';
+    $texgenresult .= texgen_seps("Die Zusammenfassung") . '\begin{abstract}\pdfbookmark[1]{Zusammenfassung}{}
+' . stripslashes(texgen_xhtmlchars($form_state['values']['textzusammenfassung'])). '
+\end{abstract}
+
+\markleft{' . stripslashes(texgen_xhtmlchars($form_state['values']['markleft'])). '}
+\markright{Inhaltsverzeichnis}
+
+\ABSCHNITTSTRENNER
+\pdfbookmark[1]{\contentsname}{toc}
+\tableofcontents
+\listoffigures
+\listoftables
+\listoffixmes
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ABSCHNITTSTRENNER
+\markright{Allgemeines}
+\include{texteile/allgemeines}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ABSCHNITTSTRENNER
+\appendix
+\markright{Anhang}
+\include{texteile/anhang}
+';
+    if ($form_state['values']['makeglossar'] == "yes") $texgenresult .= '
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ABSCHNITTSTRENNER
+\markright{Glossar}
+\def\glossaryname{Glossar}
+\printglossary
+'; else $texgenresult .=  '
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\ABSCHNITTSTRENNER
+%\markright{Glossar}
+%\def\glossaryname{Glossar}
+%\printglossary
+';
+
+    $texgenresult .= '
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ABSCHNITTSTRENNER
+\markright{Index}
+\renewcommand*{\indexpagestyle}{scrheadings}
+\printindex
+';
+
+    $texgenresult .= "\n%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n";
+    $c = ($form_state['values']['makebiblio'] == "yes" ? "" : "%");
+    $texgenresult .= "$c\ABSCHNITTSTRENNER
+        $c\markright{Literaturverzeichnis}
+%\bibliographystyle{dinat}%[Autor, Jahr]
+        $c\bibliographystyle{gerplain} %einfache Zahl
+        $c\bibliography{dateiname}
+
+\end{document}</pre>";
+
     global $_SESSION;
-    $_SESSION['tgdata'] = $form_state['values']['name'];
+    $_SESSION['texgendata'] = $texgenresult;
 }
 
 
 function texgen_docgen() {
     $r = drupal_get_form('texgen_docgenform');
-    
+
     return $r;
 }
 
@@ -59,9 +362,110 @@ function texgen_submit($form, &$form_state) {
 }
 
 function texgen_page() {
-    $r .= "<h1>D</h1><pre>";
-    $r .= $_SESSION['tgdata'];
-    $r .= "</pre>";
+    $r = $_SESSION['texgendata'];
+    if (!empty($r)) $r = "<pre>" . $r . "</pre>";
 
-    return $r . '<p>' . l('LaTeX Document', 'texgen/doc') . ' </p>';
+    return '<p>' . l('LaTeX Document', 'texgen/doc') . ' </p>' . $r;
+}
+
+
+
+
+function texgen_seps($text) {
+    return "\n\n%% ==================================\n".
+        "%% " . $text . "\n".
+        "%% ==================================\n";
+}
+
+function texgen_sepsfont($text) {
+    return "%\n%  -- $text --\n";
+}
+
+function texgen_fontselect($fontname) {
+    $r = "";
+    $r .= "%Auswahl der Schriftarten:\n";
+
+    //Palatino
+    $com = ($fontname == "palatino" ? "" : "%");
+    $r .= texgen_sepsfont("Palatino") .
+        "% Paket mathpazo akzeptiert diese Optionen:
+% leer    lieber nicht benutzen
+% [sc]    Palatino(pplx) mit echten Kapitälchen
+% [osf]   Palatino(pplj) mit echten Kapitälchen und
+%         Oldstyle-Zahlen im Text
+        $com\usepackage[sc]{mathpazo}
+        $com\linespread{1.04} % Zeilenabstand passend zur Schriftart erhöen
+        $com\usepackage[scaled=.95]{helvet}
+        $com\usepackage{courier}
+        ";
+
+
+    //Times
+    $com = ($fontname == "times" ? "" : "%");
+    $r .= texgen_sepsfont("Times") .
+        "$com\usepackage{mathptmx} % Times
+        $com\usepackage[scaled=.90]{helvet}
+        $com\usepackage{courier}
+        ";
+
+
+    //Zapf Chancery
+    $com = ($fontname == "chancery" ? "" : "%");
+    $r .= texgen_sepsfont("Zapf Chancery") .
+        "$com\usepackage{chancery}
+        $com\usepackage[scaled=.90]{helvet}
+        $com\usepackage{courier}
+        ";
+
+
+    //Bookman
+    $com = ($fontname == "bookman" ? "" : "%");
+    $r .= texgen_sepsfont("Bookman") .
+        "$com\usepackage{bookman}
+        $com\usepackage[scaled=.90]{helvet}
+        $com\usepackage{courier}
+        ";
+
+
+    //New Century Schoolbook
+    $com = ($fontname == "newcent" ? "" : "%");
+    $r .= texgen_sepsfont("New Century Schoolbook") .
+        "$com\usepackage{newcent}
+        $com\usepackage[scaled=.90]{helvet}
+        $com\usepackage{courier}
+        ";
+
+
+    //Charter
+    $com = ($fontname == "charter" ? "" : "%");
+    $r .= texgen_sepsfont("Charter") .
+        "$com\usepackage{charter}
+        $com\usepackage[scaled=.90]{helvet}
+        $com\usepackage{courier}
+        ";
+
+    //Latin Modern
+    $com = ($fontname == "lmodern" ? "" : "%");
+    $r .= texgen_sepsfont("Latin Modern") .
+        "$com\usepackage{lmodern}
+        ";
+
+    //Bera
+    $com = ($fontname == "bera" ? "" : "%");
+    $r .= texgen_sepsfont("Bera") .
+        "$com\usepackage{bera}
+        ";
+
+    //Libertine
+    $com = ($fontname == "libertine" ? "" : "%");
+    $r .= texgen_sepsfont("Libertine") .
+        "$com\usepackage{libertine}
+        ";
+
+    $r .= "\n\n\\typearea[current]{last}";
+    return $r;
+}
+
+function texgen_xhtmlchars($text) {
+	return str_replace("'", "&apos;", str_replace("\"", "&quot;", str_replace(">", "&gt;", str_replace("<", "&lt;", str_replace("&", "&amp;", $text)))));
 }
