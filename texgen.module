@@ -20,8 +20,6 @@ function texgen_menu() {
     return $items;
 }
 
-$texgen_data = null;
-
 function texgen_docgenform($formstate) {
     $form['description'] = array(
         '#type' => 'item',
@@ -41,23 +39,20 @@ function texgen_docgenform($formstate) {
 }
 
 function texgen_docgenform_submit($form, &$form_state) {
-    global $texgen_data;
-    $texgen_data = array();
-    $texgen_data['name'] = $form_state['values']['name'];
-    drupal_set_message(t('The form has been submitted. ' . $texgen_data['name']));
+    global $_SESSION;
+    $_SESSION['tgdata'] = $form_state['values']['name'];
+    
+    #$form['#redirect'] = FALSE;
 }
 
 
 function texgen_docgen() {
     $r = drupal_get_form('texgen_docgenform');
-    global $texgen_data;
     $r .= "<h1>D</h1><pre>";
-    $r .= $texgen_data['name'];
+    $r .= $_SESSION['tgdata'];
     $r .= "</pre>";
 
-    if (is_array($texgen_data)) {
-        $r = "<p>Success</p>";
-    }
+    
     return $r;
 }
 
