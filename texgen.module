@@ -30,7 +30,7 @@ function texgen_docgenform($formstate) {
     $form['common']['duplex'] = array(
         '#type' => 'radios',
         '#title' => t('Duplex document'),
-        '#options' => array('yes'=>t('Yes'),'no'=>t('No')),
+        '#options' => array('yes'=>t('Yes, duplex'),'no'=>t('No, simplex')),
         '#default_value' => 'yes',
     );
 
@@ -76,6 +76,40 @@ function texgen_docgenform($formstate) {
             'lmodern' => 'Latin Modern',
             'bera' => 'Bera',
         ),
+    );
+
+    $form['common']['bottomfill'] = array(
+        '#type' => 'select',
+        '#title' => t('Bottom line'),
+        '#options' => array(
+            'defaultbottom' => t('Default setting from document class'),
+            'flushbottom' => 'flushbuttom: ' . t('equal page height, elastic line spacing'),
+            'raggedbottom' => 'raggedbottom: ' . t('different page heights, constant line spacing'),
+        )
+    );
+
+
+
+    $form['headfoottitle'] = array(
+        '#type' => 'fieldset',
+        '#title' => t('Header, footer, title page'),
+    );
+
+    $form['headfoottitle']['ihead'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Inner or left header text'),
+        '#description' => t('E.g. your logo or your company name.'),
+    );
+
+    $form['headfoottitle']['chead'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Centered header text'),
+    );
+
+    $form['headfoottitle']['ohead'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Outer or right header text'),
+        '#description' => t('E.g. \headmark to show the current section.'),
     );
 
     $form['submit'] = array(
@@ -419,74 +453,74 @@ function texgen_fontselect($fontname) {
 % [sc]    Palatino(pplx) mit echten Kapitälchen
 % [osf]   Palatino(pplj) mit echten Kapitälchen und
 %         Oldstyle-Zahlen im Text
-        $com\usepackage[sc]{mathpazo}
-        $com\linespread{1.04} % Zeilenabstand passend zur Schriftart erhöen
-        $com\usepackage[scaled=.95]{helvet}
-        $com\usepackage{courier}
-        ";
+$com\usepackage[sc]{mathpazo}
+$com\linespread{1.04} % Zeilenabstand passend zur Schriftart erhöen
+$com\usepackage[scaled=.95]{helvet}
+$com\usepackage{courier}
+";
 
 
     //Times
     $com = ($fontname == "times" ? "" : "%");
     $r .= texgen_sepsfont("Times") .
         "$com\usepackage{mathptmx} % Times
-        $com\usepackage[scaled=.90]{helvet}
-        $com\usepackage{courier}
-        ";
+$com\usepackage[scaled=.90]{helvet}
+$com\usepackage{courier}
+";
 
 
     //Zapf Chancery
     $com = ($fontname == "chancery" ? "" : "%");
     $r .= texgen_sepsfont("Zapf Chancery") .
         "$com\usepackage{chancery}
-        $com\usepackage[scaled=.90]{helvet}
-        $com\usepackage{courier}
-        ";
+$com\usepackage[scaled=.90]{helvet}
+$com\usepackage{courier}
+";
 
 
     //Bookman
     $com = ($fontname == "bookman" ? "" : "%");
     $r .= texgen_sepsfont("Bookman") .
         "$com\usepackage{bookman}
-        $com\usepackage[scaled=.90]{helvet}
-        $com\usepackage{courier}
-        ";
+$com\usepackage[scaled=.90]{helvet}
+$com\usepackage{courier}
+";
 
 
     //New Century Schoolbook
     $com = ($fontname == "newcent" ? "" : "%");
     $r .= texgen_sepsfont("New Century Schoolbook") .
         "$com\usepackage{newcent}
-        $com\usepackage[scaled=.90]{helvet}
-        $com\usepackage{courier}
-        ";
+$com\usepackage[scaled=.90]{helvet}
+$com\usepackage{courier}
+";
 
 
     //Charter
     $com = ($fontname == "charter" ? "" : "%");
     $r .= texgen_sepsfont("Charter") .
         "$com\usepackage{charter}
-        $com\usepackage[scaled=.90]{helvet}
-        $com\usepackage{courier}
-        ";
+$com\usepackage[scaled=.90]{helvet}
+$com\usepackage{courier}
+";
 
     //Latin Modern
     $com = ($fontname == "lmodern" ? "" : "%");
     $r .= texgen_sepsfont("Latin Modern") .
         "$com\usepackage{lmodern}
-        ";
+";
 
     //Bera
     $com = ($fontname == "bera" ? "" : "%");
     $r .= texgen_sepsfont("Bera") .
         "$com\usepackage{bera}
-        ";
+";
 
     //Libertine
     $com = ($fontname == "libertine" ? "" : "%");
     $r .= texgen_sepsfont("Libertine") .
         "$com\usepackage{libertine}
-        ";
+";
 
     $r .= "\n\n\\typearea[current]{last}";
     return $r;
