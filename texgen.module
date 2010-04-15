@@ -43,13 +43,39 @@ function texgen_docgenform($formstate) {
     $form['common']['makeglossar'] = array(
         '#type' => 'checkbox',
         '#title' => t('Generate glossary'),
-        '#value' => '1'
     );
 
     $form['common']['makebiblio'] = array(
         '#type' => 'checkbox',
         '#title' => t('Generate bibliography'),
+    );
+
+    $form['common']['newcommands'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Define standard commands'),
         '#value' => '1'
+    );
+
+    $form['common']['definecolors'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Define default colours'),
+        '#value' => '1'
+    );
+
+    $form['common']['schriftart'] = array(
+        '#type' => 'select',
+        '#title' => t('Font'),
+        '#options' => array(
+            'libertine' => 'Libertine',
+            'palatino' => 'Palatino',
+            'times' => 'Times',
+            'chancery' => 'Zapf Chancery',
+            'bookman' => 'Bookman',
+            'newcent' => 'New Century Schoolbook',
+            'charter' => 'Charter',
+            'lmodern' => 'Latin Modern',
+            'bera' => 'Bera',
+        ),
     );
 
     $form['submit'] = array(
