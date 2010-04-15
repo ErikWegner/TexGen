@@ -12,7 +12,8 @@ function texgen_menu() {
 
     $items['texgen/doc'] = array(
         'title' => 'GenForm',
-        'page callback' => 'texgen_docgen',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('texgen_docgenform'),
         'access arguments' => array('access content'),
         'type' => MENU_DEFAULT_LOCAL_TASK,
     );
@@ -35,23 +36,20 @@ function texgen_docgenform($formstate) {
         '#type' => 'submit',
         '#value' => 'Submit',
     );
+
+    $form['#redirect'] = 'texgen';
+
     return $form;
 }
 
 function texgen_docgenform_submit($form, &$form_state) {
     global $_SESSION;
     $_SESSION['tgdata'] = $form_state['values']['name'];
-    
-    #$form['#redirect'] = FALSE;
 }
 
 
 function texgen_docgen() {
     $r = drupal_get_form('texgen_docgenform');
-    $r .= "<h1>D</h1><pre>";
-    $r .= $_SESSION['tgdata'];
-    $r .= "</pre>";
-
     
     return $r;
 }
@@ -61,5 +59,9 @@ function texgen_submit($form, &$form_state) {
 }
 
 function texgen_page() {
-    return '<p>' . l('LaTeX Document', 'texgen/doc') . ' </p>';
+    $r .= "<h1>D</h1><pre>";
+    $r .= $_SESSION['tgdata'];
+    $r .= "</pre>";
+
+    return $r . '<p>' . l('LaTeX Document', 'texgen/doc') . ' </p>';
 }
