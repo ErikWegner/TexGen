@@ -30,6 +30,90 @@ function texgen_menu() {
 }
 
 function texgen_lettergenform($formstate) {
+    $form['sender'] = array(
+        '#type' => 'fieldset',
+        '#title' => t('Sender'),
+    );
+
+    $form['sender']['fromname'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Name'),
+    );
+
+    $form['sender']['fromaddress'] = array(
+        '#type' => 'textarea',
+        '#title' => t('Address'),
+        '#default_value' => "Straße~Hausnummer\nPLZ~Ort",
+    );
+
+    $form['sender']['fromemail'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Email'),
+    );
+    $form['sender']['swfromemail'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Show email address in letterhead'),
+    );
+
+    $form['sender']['fromurl'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Homepage'),
+    );
+    $form['sender']['swfromurl'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Show homepage in letterhead'),
+    );
+
+    $form['sender']['fromphone'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Telephone'),
+        '#description' => t('Group figures by using \, as delimiter')
+    );
+    $form['sender']['swfromphone'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Show telephone number in letterhead'),
+    );
+
+    $form['sender']['fromfax'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Fax'),
+        '#description' => t('Group figures by using \, as delimiter')
+    );
+    $form['sender']['swfromfax'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Show fax number in letterhead'),
+    );
+
+    $form['sender']['fromlogo'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Logo'),
+        '#description' => t('Command to display a logo')
+    );
+
+//    $form['sender']['frombank'] = array(
+//        '#type' => 'textfield',
+//        '#title' => t('Account'),
+//        '#description' => t('Information about your banking account, this value is not processed at the moment.')
+//    );
+
+    $form['sender']['location'] = array(
+        '#type' => 'textarea',
+        '#title' => t('Additional information'),
+        '#description' => t('E.g. additional business information')
+    );
+
+    $form['sender']['swfromrule'] = array(
+        '#type' => 'select',
+        '#title' => t('Rule'),
+        '#options' => array(
+            'afteraddress' => t('Underneath sender information block'),
+            'aftername' => t('Right after sender name'),
+            'swfromruleoff' => t('No rule'),
+        ),
+        '#default_value' => 'swfromruleoff'
+    );
+
+    
     $form['submit'] = array(
         '#type' => 'submit',
         '#value' => 'Submit',
@@ -57,7 +141,7 @@ function texgen_docgenform($formstate) {
     $form['common']['makeidx'] = array(
         '#type' => 'checkbox',
         '#title' => t('Generate index'),
-        '#value' => '1'
+        '#default_value' => '1'
     );
 
     $form['common']['makeglossar'] = array(
@@ -73,13 +157,13 @@ function texgen_docgenform($formstate) {
     $form['common']['newcommands'] = array(
         '#type' => 'checkbox',
         '#title' => t('Define standard commands'),
-        '#value' => '1'
+        '#default_value' => '1'
     );
 
     $form['common']['definecolors'] = array(
         '#type' => 'checkbox',
         '#title' => t('Define default colours'),
-        '#value' => '1'
+        '#default_value' => '1'
     );
 
     $form['common']['schriftart'] = array(
@@ -174,37 +258,37 @@ function texgen_docgenform($formstate) {
     $form['pdfdocinfo']['pdfhyperref'] = array(
         '#type' => 'checkbox',
         '#title' => t('Use package hyperref'),
-        '#value' => '1'
+        '#default_value' => '1'
     );
 
     $form['pdfdocinfo']['pdfdraft'] = array(
         '#type' => 'checkbox',
         '#title' => t('Always generate pdf settings (draft=false)'),
-        '#value' => '1'
+        '#default_value' => '1'
     );
 
     $form['pdfdocinfo']['pdfbookmarks'] = array(
         '#type' => 'checkbox',
         '#title' => t('Generate bookmarks'),
-        '#value' => '1'
+        '#default_value' => '1'
     );
 
     $form['pdfdocinfo']['pdfbookmarksnum'] = array(
         '#type' => 'checkbox',
         '#title' => t('Include section numbers in bookmarks'),
-        '#value' => '1'
+        '#default_value' => '1'
     );
 
     $form['pdfdocinfo']['pdfbookmarksopen'] = array(
         '#type' => 'checkbox',
         '#title' => t('Bookmarks panel opened by default'),
-        '#value' => '1'
+        '#default_value' => '1'
     );
 
     $form['pdfdocinfo']['pdfcolorlinks'] = array(
         '#type' => 'checkbox',
         '#title' => t('Colour pdf links'),
-        '#value' => '1'
+        '#default_value' => '1'
     );
 
     $form['pdfdocinfo']['pdfauthor'] = array(
