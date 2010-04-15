@@ -113,7 +113,36 @@ function texgen_lettergenform($formstate) {
         '#default_value' => 'swfromruleoff'
     );
 
-    
+
+
+    $form['letter'] = array(
+        '#type' => 'fieldset',
+        '#title' => t('Subject, title, recipient'),
+    );
+
+    $form['letter']['subject'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Subject'),
+    );
+
+    $form['letter']['title'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Title'),
+        '#description' => t('E.g. Reminder, the text is put underneath the business line')
+    );
+
+    $form['letter']['empf'] = array(
+        '#type' => 'textarea',
+        '#title' => t('Recipient'),
+        '#default_value' => "Vorname~Nachname\nStraße~Hausnummer\nPLZ~Ort",
+    );
+
+    $form['letter']['opening'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Opening'),
+        '#default_value' => t('Dear Sir or Madame,')
+    );
+
     $form['submit'] = array(
         '#type' => 'submit',
         '#value' => 'Submit',
