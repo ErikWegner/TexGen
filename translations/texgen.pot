@@ -1,0 +1,441 @@
+# $Id$
+#
+# LANGUAGE translation of Drupal (general)
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+# Generated from files:
+#  texgen.module: n/a
+#  texgen.info: n/a
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2010-04-16 10:46+0200\n"
+"PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
+"Last-Translator: NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: texgen.module:14
+msgid "Document generator"
+msgstr ""
+
+#: texgen.module:22
+msgid "Letter generator"
+msgstr ""
+
+#: texgen.module:35
+msgid "Sender"
+msgstr ""
+
+#: texgen.module:40
+msgid "Name"
+msgstr ""
+
+#: texgen.module:45
+msgid "Address"
+msgstr ""
+
+#: texgen.module:51
+msgid "Email"
+msgstr ""
+
+#: texgen.module:55
+msgid "Show email address in letterhead"
+msgstr ""
+
+#: texgen.module:60
+msgid "Homepage"
+msgstr ""
+
+#: texgen.module:64
+msgid "Show homepage in letterhead"
+msgstr ""
+
+#: texgen.module:69
+msgid "Telephone"
+msgstr ""
+
+#: texgen.module:70;80
+msgid "Group figures by using \\, as delimiter"
+msgstr ""
+
+#: texgen.module:74
+msgid "Show telephone number in letterhead"
+msgstr ""
+
+#: texgen.module:79
+msgid "Fax"
+msgstr ""
+
+#: texgen.module:84
+msgid "Show fax number in letterhead"
+msgstr ""
+
+#: texgen.module:89
+msgid "Logo"
+msgstr ""
+
+#: texgen.module:90
+msgid "Command to display a logo"
+msgstr ""
+
+#: texgen.module:101
+msgid "Additional information"
+msgstr ""
+
+#: texgen.module:102
+msgid "E.g. additional business information"
+msgstr ""
+
+#: texgen.module:107
+msgid "Rule"
+msgstr ""
+
+#: texgen.module:109
+msgid "Underneath sender information block"
+msgstr ""
+
+#: texgen.module:110
+msgid "Right after sender name"
+msgstr ""
+
+#: texgen.module:111
+msgid "No rule"
+msgstr ""
+
+#: texgen.module:120
+msgid "Subject, title, recipient"
+msgstr ""
+
+#: texgen.module:125;433
+msgid "Subject"
+msgstr ""
+
+#: texgen.module:130;428
+msgid "Title"
+msgstr ""
+
+#: texgen.module:131
+msgid "E.g. Reminder, the text is put underneath the business line"
+msgstr ""
+
+#: texgen.module:136
+msgid "Recipient"
+msgstr ""
+
+#: texgen.module:142
+msgid "Opening"
+msgstr ""
+
+#: texgen.module:143
+msgid "Dear Sir or Madame,"
+msgstr ""
+
+#: texgen.module:151
+msgid "Business line"
+msgstr ""
+
+#: texgen.module:155
+msgid "Place"
+msgstr ""
+
+#: texgen.module:156
+msgid "Place is put before the date"
+msgstr ""
+
+#: texgen.module:160
+msgid "Date"
+msgstr ""
+
+#: texgen.module:161
+msgid "If empty, today will be used"
+msgstr ""
+
+#: texgen.module:165
+msgid "My reference"
+msgstr ""
+
+#: texgen.module:169
+msgid "Your reference"
+msgstr ""
+
+#: texgen.module:173
+msgid "Your mail"
+msgstr ""
+
+#: texgen.module:177
+msgid "Customer"
+msgstr ""
+
+#: texgen.module:181
+msgid "Invoice"
+msgstr ""
+
+#: texgen.module:190
+msgid "Additional settings"
+msgstr ""
+
+#: texgen.module:194
+msgid "Signature"
+msgstr ""
+
+#: texgen.module:195
+msgid "If empty, sender name will be shown"
+msgstr ""
+
+#: texgen.module:199
+msgid "Post scriptum"
+msgstr ""
+
+#: texgen.module:203
+msgid "Mailling list"
+msgstr ""
+
+#: texgen.module:204;209
+msgid "Separate entries with double back slashes: \\\\"
+msgstr ""
+
+#: texgen.module:208
+msgid "Enclosures"
+msgstr ""
+
+#: texgen.module:213
+msgid "Paragraph skip"
+msgstr ""
+
+#: texgen.module:215
+msgid "Indent, do not skip"
+msgstr ""
+
+#: texgen.module:216
+msgid "No indent, skip one line, at least 1em space on last paragraph line"
+msgstr ""
+
+#: texgen.module:217
+msgid "No indent, skip one line, at least one quarter space on last paragraph line"
+msgstr ""
+
+#: texgen.module:218
+msgid "No indent, skip one line, at least one third on last paragraph line"
+msgstr ""
+
+#: texgen.module:219
+msgid "No indent, skip one line, last paragraph line can have any length"
+msgstr ""
+
+#: texgen.module:220
+msgid "No indent, skip half a line, at least 1em space on last paragraph line"
+msgstr ""
+
+#: texgen.module:221
+msgid "No indent, skip half a line, at least one quarter space on last paragraph line"
+msgstr ""
+
+#: texgen.module:222
+msgid "No indent, skip half a line, at least one third on last paragraph line"
+msgstr ""
+
+#: texgen.module:223
+msgid "No indent, skip half a line, last paragraph line can have any length"
+msgstr ""
+
+#: texgen.module:230;298
+msgid "Font"
+msgstr ""
+
+#: texgen.module:258
+msgid "Common settings"
+msgstr ""
+
+#: texgen.module:263
+msgid "Duplex document"
+msgstr ""
+
+#: texgen.module:264
+msgid "Yes, duplex"
+msgstr ""
+
+#: texgen.module:264
+msgid "No, simplex"
+msgstr ""
+
+#: texgen.module:270
+msgid "Generate index"
+msgstr ""
+
+#: texgen.module:276
+msgid "Generate glossary"
+msgstr ""
+
+#: texgen.module:281
+msgid "Generate bibliography"
+msgstr ""
+
+#: texgen.module:286
+msgid "Define standard commands"
+msgstr ""
+
+#: texgen.module:292
+msgid "Define default colours"
+msgstr ""
+
+#: texgen.module:314
+msgid "Bottom line"
+msgstr ""
+
+#: texgen.module:316
+msgid "Default setting from document class"
+msgstr ""
+
+#: texgen.module:317
+msgid "equal page height, elastic line spacing"
+msgstr ""
+
+#: texgen.module:318
+msgid "different page heights, constant line spacing"
+msgstr ""
+
+#: texgen.module:326
+msgid "Header, footer, title page"
+msgstr ""
+
+#: texgen.module:331
+msgid "Inner or left header text"
+msgstr ""
+
+#: texgen.module:332
+msgid "E.g. your logo or your company name."
+msgstr ""
+
+#: texgen.module:337
+msgid "Centered header text"
+msgstr ""
+
+#: texgen.module:342
+msgid "Outer or right header text"
+msgstr ""
+
+#: texgen.module:343
+msgid "E.g. \\headmark to show the current section."
+msgstr ""
+
+#: texgen.module:348
+msgid "Inner or left footer text"
+msgstr ""
+
+#: texgen.module:349
+msgid "E.g. \\tiny Your name."
+msgstr ""
+
+#: texgen.module:354
+msgid "Centered footer text"
+msgstr ""
+
+#: texgen.module:359
+msgid "Outer or right footer text"
+msgstr ""
+
+#: texgen.module:360
+msgid "E.g. \\pagemark  to show the current page number."
+msgstr ""
+
+#: texgen.module:365
+msgid "Title page heading"
+msgstr ""
+
+#: texgen.module:370;423
+msgid "Author"
+msgstr ""
+
+#: texgen.module:375
+msgid "Abstract"
+msgstr ""
+
+#: texgen.module:382
+msgid "PDF document information and settings"
+msgstr ""
+
+#: texgen.module:387
+msgid "Use package hyperref"
+msgstr ""
+
+#: texgen.module:393
+msgid "Always generate pdf settings (draft=false)"
+msgstr ""
+
+#: texgen.module:399
+msgid "Generate bookmarks"
+msgstr ""
+
+#: texgen.module:405
+msgid "Include section numbers in bookmarks"
+msgstr ""
+
+#: texgen.module:411
+msgid "Bookmarks panel opened by default"
+msgstr ""
+
+#: texgen.module:417
+msgid "Colour pdf links"
+msgstr ""
+
+#: texgen.module:438
+msgid "Keywords"
+msgstr ""
+
+#: texgen.module:443;455
+msgid "Page mode"
+msgstr ""
+
+#: texgen.module:445;457;470
+msgid "No setting"
+msgstr ""
+
+#: texgen.module:446
+msgid "Thumbnails opened"
+msgstr ""
+
+#: texgen.module:447
+msgid "Bookmarks opened"
+msgstr ""
+
+#: texgen.module:448
+msgid "Fullscreen"
+msgstr ""
+
+#: texgen.module:458;471
+msgid "Fit page"
+msgstr ""
+
+#: texgen.module:459;472
+msgid "Fit page width"
+msgstr ""
+
+#: texgen.module:460;473
+msgid "Fit page contents"
+msgstr ""
+
+#: texgen.module:461;474
+msgid "Fit page contents width"
+msgstr ""
+
+#: texgen.module:468
+msgid "Page mode when following internal links"
+msgstr ""
+
+#: texgen.module:776;1014
+msgid "Your document has been created."
+msgstr ""
+
+#: texgen.module:7 texgen.info:0
+msgid "LaTeX Generator"
+msgstr ""
+
+#: texgen.info:0
+msgid "Generates sources for a LaTeX document with several options"
+msgstr ""
+
