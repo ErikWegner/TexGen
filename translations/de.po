@@ -30,7 +30,7 @@ msgstr "Briefgenerator"
 
 #: texgen.module:35
 msgid "Sender"
-msgstr "Absendr"
+msgstr "Absender"
 
 #: texgen.module:40
 msgid "Name"
