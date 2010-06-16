@@ -511,12 +511,12 @@ function texgen_docgenform_submit($form, &$form_state) {
 
     $texgenresult .= texgen_seps("Pakete einbinden");
 
-    if ($form_state['values']['makeidx'] == "yes") $texgenresult .= '
+    if ($form_state['values']['makeidx'] == "1") $texgenresult .= '
 \usepackage{makeidx} % Paket zur Indexerzeugung
 \makeindex % Indexerzeugung aktivieren';
 
-    $texgenresult .= "\n".($form_state['values']['makeglossar'] == "yes" ? "" : "%") . "\usepackage[style=altlist,toc=true,hyper=true,number=none]{glossary} % Paket für Glossar\n";
-    $texgenresult .= ($form_state['values']['makeglossar'] == "yes" ? "" : "%") . "\makeglossary % Glossarerzeugung aktivieren\n";
+    $texgenresult .= "\n".($form_state['values']['makeglossar'] == "1" ? "" : "%") . "\usepackage[style=altlist,toc=true,hyper=true,number=none]{glossary} % Paket für Glossar\n";
+    $texgenresult .= ($form_state['values']['makeglossar'] == "1" ? "" : "%") . "\makeglossary % Glossarerzeugung aktivieren\n";
     $texgenresult .= "%Glossareinträge an der jeweiligen Textstelle mit:
 % \glossary{
 %   name={Computer},
@@ -780,7 +780,7 @@ function texgen_page() {
     $r = $_SESSION['texgendata'];
     if (!empty($r)) $r = "<pre>" . $r . "</pre>";
 
-    return '<p>' . l('LaTeX Document', 'texgen/doc') . ' ' . l('LaTeX Letter', 'texgen/letter') . '</p>' . $r;
+    return '<ol><li>' . l('LaTeX Document', 'texgen/doc') . '</li><li>' . l('LaTeX Letter', 'texgen/letter') . '</li></ol>' . $r;
 }
 
 
@@ -905,16 +905,16 @@ function texgen_lettergenform_submit($form, &$form_state) {
 	$seite .= 'parskip=' . (ereg('^(full)|(half)[\+\*\-]?$', $form_state['values']['parskip']) ? $form_state['values']['parskip'] : 'off' ) . ', %Einzug (off) oder Abstand((full)|(half)[\+\*\-]?)
   ';
 
-	$seite .= 'fromphone=' . ($form_state['values']['swfromphone'] == 'on' ? 'on' : 'off') . ', %Telefonnummer des Absenders setzen (true/false)
+	$seite .= 'fromphone='  . ($form_state['values']['swfromphone'] == '1' ? 'on' : 'off') . ', %Telefonnummer des Absenders setzen (true/false)
   ';
 
-	$seite .= 'fromfax=' . ($form_state['values']['swfromfax'] == 'on' ? 'on' : 'off') . ', %Faxnummer des Absenders setzen (true/false)
+	$seite .= 'fromfax=' . ($form_state['values']['swfromfax'] == '1' ? 'on' : 'off') . ', %Faxnummer des Absenders setzen (true/false)
   ';
 
-	$seite .= 'fromemail=' . ($form_state['values']['swfromemail'] == 'on' ? 'on' : 'off') . ', %E-Mailadresse des Absenders setzen (true/false)
+	$seite .= 'fromemail=' . ($form_state['values']['swfromemail'] == '1' ? 'on' : 'off') . ', %E-Mailadresse des Absenders setzen (true/false)
   ';
 
-	$seite .= 'fromurl=' . ($form_state['values']['swfromurl'] == 'on' ? 'on' : 'off') . ', %Internetadresse des Absenders setzen (true/false)
+	$seite .= 'fromurl=' . ($form_state['values']['swfromurl'] == '1' ? 'on' : 'off') . ', %Internetadresse des Absenders setzen (true/false)
   ';
 
 	switch($form_state['values']['swfromrule']) {
