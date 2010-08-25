@@ -780,7 +780,7 @@ function texgen_page() {
     $r = $_SESSION['texgendata'];
     if (!empty($r)) $r = "<pre>" . $r . "</pre>";
 
-    return '<ol><li>' . l('LaTeX Document', 'texgen/doc') . '</li><li>' . l('LaTeX Letter', 'texgen/letter') . '</li></ol>' . $r;
+    return '<ol><li>' . l(t('LaTeX Document'), 'texgen/doc') . '</li><li>' . l(t('LaTeX Letter'), 'texgen/letter') . '</li></ol>' . $r;
 }
 
 
