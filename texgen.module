@@ -246,8 +246,6 @@ function texgen_lettergenform($formstate) {
         '#value' => 'Submit',
     );
 
-    $form['#redirect'] = 'texgen';
-
     return $form;
 }
 
@@ -480,8 +478,6 @@ function texgen_docgenform($formstate) {
         '#type' => 'submit',
         '#value' => 'Submit',
     );
-
-    $form['#redirect'] = 'texgen';
 
     return $form;
 }
@@ -717,7 +713,7 @@ function texgen_docgenform_submit($form, &$form_state) {
 ' . stripslashes(texgen_xhtmlchars($form_state['values']['textzusammenfassung'])). '
 \end{abstract}
 
-\markleft{' . stripslashes(texgen_xhtmlchars($form_state['values']['markleft'])). '}
+\markleft{ }
 \markright{Inhaltsverzeichnis}
 
 \ABSCHNITTSTRENNER
@@ -773,11 +769,16 @@ function texgen_docgenform_submit($form, &$form_state) {
     global $_SESSION;
     $_SESSION['texgendata'] = $texgenresult;
 
+    $form_state['redirect'] = 'texgen';
+
     drupal_set_message(t('Your document has been created.'));
 }
 
 function texgen_page() {
-    $r = $_SESSION['texgendata'];
+    $r = '';
+    if (array_key_exists('texgendata', $_SESSION)) {
+        $r = $_SESSION['texgendata'];
+    }
     if (!empty($r)) $r = "<pre>" . $r . "</pre>";
 
     return '<ol><li>' . l(t('LaTeX Document'), 'texgen/doc') . '</li><li>' . l(t('LaTeX Letter'), 'texgen/letter') . '</li></ol>' . $r;
@@ -1010,6 +1011,8 @@ texgen_commandIfVar("cc", "cc", 4, $form_state['values']) .
 	 $seite .= '</pre>';
     global $_SESSION;
     $_SESSION['texgendata'] = $seite;
+
+    $form_state['redirect'] = 'texgen';
 
     drupal_set_message(t('Your document has been created.'));
 }
