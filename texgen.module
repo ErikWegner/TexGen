@@ -903,7 +903,7 @@ function texgen_lettergenform_submit($form, &$form_state) {
   fontsize=11pt,
   ';
 
-	$seite .= 'parskip=' . (ereg('^(full)|(half)[\+\*\-]?$', $form_state['values']['parskip']) ? $form_state['values']['parskip'] : 'off' ) . ', %Einzug (off) oder Abstand((full)|(half)[\+\*\-]?)
+	$seite .= 'parskip=' . (preg_match('/^(full)|(half)[\+\*\-]?$/', $form_state['values']['parskip']) ? $form_state['values']['parskip'] : 'off' ) . ', %Einzug (off) oder Abstand((full)|(half)[\+\*\-]?)
   ';
 
 	$seite .= 'fromphone='  . ($form_state['values']['swfromphone'] == '1' ? 'on' : 'off') . ', %Telefonnummer des Absenders setzen (true/false)
