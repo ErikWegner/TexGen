@@ -9,6 +9,7 @@ namespace Drupal\texgen\Form;
 
 use Drupal\texgen\Form\TexGenBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 
 class DocumentForm extends TexGenBase {
   public function getFormId() {
@@ -19,10 +20,6 @@ class DocumentForm extends TexGenBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $form['result'] = array(
-      '#type' => 'texgen_document',
-    );
-
     $form['common'] = array(
         '#type' => 'fieldset',
         '#title' => t('Common settings'),
@@ -258,6 +255,14 @@ class DocumentForm extends TexGenBase {
  * {@inheritdoc}
  */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    drupal_set_message(t('Your document has been created.'));
+    $document = array(
+      '#type' => 'texgen_document',
+      '#texgenformdata' => $form_state->getValues(),
+    );
+
+    global $_SESSION;
+    $_SESSION['texgen']['result'] =  \Drupal::service('renderer')->render($document);
+
+    $form_state->setRedirectUrl(Url::fromRoute('texgen.page'));
   }
 }

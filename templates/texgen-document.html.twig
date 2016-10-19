@@ -5,15 +5,12 @@
  *
  * Available variables:
  * - element: Element that will be rendered.
- * - element['link'] : a link
- * - element['description'] : a description
- * - element['pre_render_addition'] : added during the #pre_render function
- * - element['#random_number'] : a random number variable, won't be printed with the element.
+ * - element['d'] : an array
  *
  * @ingroup themeable
  */
 #}
- 
+
 <pre class="brush: latex">%\listfiles % für Fehlersuche
 % Dokumentenklasse und Optionen
 \documentclass[
@@ -28,4 +25,307 @@
   a4paper,    % Papiergröße A4
   abstracton, % Zusammenfassung aktivieren
   titlepage,  % Eine Titelseite erstellen
+{{ element.d.duplex == "yes" ? " " : "%" }} twoside,    % zweiseitiges Layout
+{{ element.d.duplex == "yes" ? " " : "%" }} oneside,    % einseitiges Layout
+  DIVcalc
+]{scrartcl}
+
+%% ==================================
+%% Pakete einbinden
+%% ==================================
+
+{% if element.d.makeidx == "1" %}
+\usepackage{makeidx} % Paket zur Indexerzeugung
+\makeindex % Indexerzeugung aktivieren'
+{% endif %}
+
+{% if element.d.makeglossar == "1" %}
+\usepackage[style=altlist,toc=true,hyper=true,number=none]{glossary} % Paket für Glossar
+\makeglossary % Glossarerzeugung aktivieren
+%Glossareinträge an der jeweiligen Textstelle mit:
+% \glossary{
+%   name={Computer},
+%   description={Eine Maschine zur Lösung von Problemen,
+%     die es ohne diese Maschine nicht gäbe.}
+% }
+%Erstellung des Glossars mit makeindex:
+%makeindex -s dateiname.ist -t dateiname.glg -o dateiname.gls dateiname.glo
+{% endif %}
+
+\usepackage[headsepline,footsepline]{scrpage2} % Kopf- und Fußzeile
+\usepackage[utf8]{inputenc} % Encoding der TeX-Dateien:
+% latin1 = Windows,
+% ansi = Linux alt,
+% utf8 = Linux aktuell
+\usepackage[T1]{fontenc} % Aktiviert EC-Schriftarten
+%\usepackage{ae} % Schöne Schriften für PDF-Dateien
+\usepackage{textcomp} % Text-Companion-Symbols (z. B. \texteuro)
+\usepackage[ngerman]{babel} % Deutsche Einstellungen
+%Paket times ist veraltet, siehe
+% http://www.ctan.org/tex-archive/info/german/l2tabu/l2tabu.pdf
+% \usepackage{times} % Times-Schriftart auswählen
+
+%Auswahl der Schriftarten:
+%
+%  -- Palatino --
+{% set font = (element.d.schriftart == 'palatino' ? '' : '%') %}
+% Paket mathpazo akzeptiert diese Optionen:
+% leer    lieber nicht benutzen
+% [sc]    Palatino(pplx) mit echten Kapitälchen
+% [osf]   Palatino(pplj) mit echten Kapitälchen und
+%         Oldstyle-Zahlen im Text
+{{ font }}\usepackage[sc]{mathpazo}
+{{ font }}\linespread{1.04} % Zeilenabstand passend zur Schriftart erhöen
+{{ font }}\usepackage[scaled=.95]{helvet}
+{{ font }}\usepackage{courier}
+%
+%  -- Times --
+{% set font = (element.d.schriftart == 'times' ? '' : '%') %}
+{{ font }}\usepackage{mathptmx} % Times
+{{ font }}\usepackage[scaled=.90]{helvet}
+{{ font }}\usepackage{courier}
+%
+%  -- Zapf Chancery --
+{% set font = (element.d.schriftart == 'chancery' ? '' : '%') %}
+{{ font }}\usepackage{chancery}
+{{ font }}\usepackage[scaled=.90]{helvet}
+{{ font }}\usepackage{courier}
+%
+%  -- Bookman --
+{% set font = (element.d.schriftart == 'bookman' ? '' : '%') %}
+{{ font }}\usepackage{bookman}
+{{ font }}\usepackage[scaled=.90]{helvet}
+{{ font }}\usepackage{courier}
+%
+%  -- New Century Schoolbook --
+{% set font = (element.d.schriftart == 'newcent' ? '' : '%') %}
+{{ font }}\usepackage{newcent}
+{{ font }}\usepackage[scaled=.90]{helvet}
+{{ font }}\usepackage{courier}
+%
+%  -- Charter --
+{% set font = (element.d.schriftart == 'charter' ? '' : '%') %}
+{{ font }}\usepackage{charter}
+{{ font }}\usepackage[scaled=.90]{helvet}
+{{ font }}\usepackage{courier}
+%
+%  -- Latin Modern --
+{% set font = (element.d.schriftart == 'lmodern' ? '' : '%') %}
+{{ font }}\usepackage{lmodern}
+%
+%  -- Bera --
+{% set font = (element.d.schriftart == 'bera' ? '' : '%') %}
+{{ font }}\usepackage{bera}
+%
+%  -- Libertine --
+{% set font = (element.d.schriftart == 'libertine' ? '' : '%') %}
+{{ font }}\usepackage{libertine}
+
+\typearea[current]{last}
+\usepackage{marvosym} % Symbole und das Euro-Zeichen \EUR
+\usepackage{eurosym} % Euro-Zeichen nach offz. Vorgaben, Geld durch \EUR{100,00}
+\usepackage[final]{microtype} % Mikrotypographische Anpassungen
+\usepackage{fixltx2e} % korrigiert LaTeX-Fehler
+%\usepackage{mparhack} % wenn verfügbar, korrigiert Fehler bei marginpar-Befehl
+\usepackage{color,graphics,graphicx} % Unterstützung für Grafiken und Farben
+\usepackage{picins} % Text umfließt Grafiken
+%\usepackage{eso-pic} % nur falls Entwurf-Seitenhintergrund
+% \usepackage{url} % nur falls kein hyperref-Paket genutzt wird
+% \usepackage{longtable} % für Tabellen über mehrere Seiten
+% \usepackage{fancyvrb} % für verbatiminput
+% \usepackage{listings} % Quelltexte formatiert ausgeben
+\usepackage{booktabs} % Tabellenformatierungsbefehle top-/mid-/bottomrule
+\usepackage{caption}
+%\usepackage[ngerman]{varioref} % variable Referenzen
+%\usepackage[square]{natbib} % Literaturverzeichnis
+
+{% if element.d.pdfhyperref == '1' %}
+% PDF-Optionen, PDF-Hyperlinks
+\usepackage[
+{{ element.d.pdfdraft == '1' ? " " : "%" }} draft=false, %
+{% if element.d.pdfbookmarks == '1' %}
+  bookmarks=true, %
+{% if element.d.pdfbookmarksnum == '1' %}  bookmarksnumbered=true, %
+{% endif %}
+{% if element.d.pdfbookmarksopen == '1' %}  bookmarksopen=true, %
+{% endif %}
+{% endif %}{# pdfbookmarks #}
+{% if element.d.pdfcolorlinks == '1' %}  colorlinks, linkcolor=blue, urlcolor=blue, %
+{% endif %}
+  pdfauthor={{ '{' }}{{ element.d.pdfauthor }}}, %
+  pdftitle={{ '{' }}{{ element.d.pdftitle }}}, %
+  pdfsubject={{ '{' }}{{ element.d.pdfsubject }}}, %
+  pdfkeywords={{ '{' }}{{ element.d.pdfkeywords }}}, %
+{% if element.d.pdfpagemode == '2' %}
+  pdfpagemode=UseThumbs, %
+{% elseif element.d.pdfpagemode == '3' %}
+  pdfpagemode=UseOutlines, %
+{% elseif element.d.pdfpagemode == '4' %}
+  pdfpagemode=FullScreen, %
+{% endif %}{# pdfpagemode #}
+{% if element.d.pdfstartview == '2' %}
+  pdfstartview=Fit, %
+{% elseif element.d.pdfstartview == '3' %}
+  pdfstartview=FitH, %
+{% elseif element.d.pdfstartview == '4' %}
+  pdfstartview=FitB, %
+{% elseif element.d.pdfstartview == '5' %}
+  pdfstartview=FitBH, %
+{% endif %}{# pdfstartview #}
+{% if element.d.pdfview == '2' %}
+  pdfview=Fit, %
+{% elseif element.d.pdfview == '3' %}
+  pdfview=FitH, %
+{% elseif element.d.pdfview == '4' %}
+  pdfview=FitB, %
+{% elseif element.d.pdfview == '5' %}
+  pdfview=FitBH, %
+{% endif %}{# pdfview #}
+  a4paper]{hyperref}
+\usepackage[all]{hypcap} %Klicken auf Verweise rückt Ziel in den Mittelpunkt
+%\usepackage{pdfcolmk} %bei Problemen mit Farben beim Seitenwechsel
+{% endif %}{# pdfhyperref #}
+
+{% if element.d.newcommands == '1' %}
+%% ==================================
+%% Standardbefehle für \\newcommand
+%% ==================================
+
+%%Dieses Kommando trennt die einzelnen Dokumentenabschnitte
+%%wahlweise eine neue Seite
+\newcommand{\ABSCHNITTSTRENNER}{\cleardoublepage }
+
+%%Dieses Kommando setzt einen Backslash,
+%%an dem ohne ein Trennzeichen getrennt werden kann
+\newcommand{\trennBS}{\texttt{\char92}" "}
+
+%Einstellungen für Abbildungsbeschriftungen
+\captionsetup{margin=10pt,font=small,labelfont=bf,position=bottom}
+
+%%Dieses Kommando setzt um den übergebenen Parameter
+%%deutsche doppelte Anführungszeichen
+\newcommand{\gdq}[1]{\glqq{}#1\grqq{}}
+
+%%Dieses Kommando setzt um den übergebenen Parameter
+%%französische Anführungszeichen (innen, außen, einfach, doppelt)
+\\newcommand{\\fqi}[1]{\\frq#1\\flq}                 % Anführungsz. einfach
+\\newcommand{\\fqqi}[1]{\\frqq#1\\flqq}              % Anführungsz. doppelt
+\\newcommand{\\fqa}[1]{\\flq#1\\frq}                 % Anführungsz. einfach
+\\newcommand{\\fqqa}[1]{\\flqq#1\\frqq}              % Anführungsz. doppelt
+
+%enquote-Befehl für alle Anführungszeichen verwenden,
+%dann kann schnell eine andere Formatierung genutzt werden
+%\\newcommand{\\enquote}[1]{\\fqqi{{ '{' }}#1}}              % diese Anf.zeichen nutzen
+\\usepackage[babel,german=guillemets]{csquotes} % falls Paket nicht vorhanden, vorherige Zeile aktivieren
+
+%%Ein Platzhalter für Daten, die später ergänzt werden
+\usepackage[margin,ngerman]{fixme}
+\newcommand{\weissnicht}{XX?\-XX?\-XX?\-XX\fixme{Hier fehlt was!}}
+
+%%Der Parameter erscheint im Text und im Index
+\newcommand{\textindex}[1]{{ '{' }}#1\index{{ '{' }}#1}}
+
+{% endif %}{# newcommands #}
+{% if element.d.definecolors == '1' %}
+%% ==================================
+%% Standardfarben definieren
+%% ==================================
+\definecolor{gruen}{rgb}{0.0,1.0,0.0}
+\definecolor{gelb}{rgb}{1.0,1.0,0.0}
+\definecolor{rot}{rgb}{1.0,0.0,0.0}
+\definecolor{weiss}{rgb}{1.0,1.0,1.0}
+\definecolor{schwarz}{rgb}{0.0,0.0,0.0}
+
+{% endif %}{# definecolors #}
+%% ==================================
+%% Kopf- und Fußzeile definieren
+%% ==================================
+\manualmark % Manuelle Einstellungen anschalten
+\pagestyle{scrheadings}
+\ihead{{ '{' }}%\includegraphics[height=2ex,draft=false]{zusatz/logo}
+{{ element.d.ihead }}
+}
+\chead{{ '{' }}{{ element.d.chead }}}
+\ohead{{ '{' }}{{ element.d.ohead }}}
+
+\ifoot{{ '{' }}{{ element.d.ifoot }}}
+\cfoot{{ '{' }}{{ element.d.cfoot }}}
+\ofoot{{ '{' }}{{ element.d.ofoot }}}
+
+% Eine Seite ohne Kopf- und Fußzeile
+\defpagestyle{plainwfl}{(0pt,0pt){} {} {}(0pt,0pt)}{(0pt,0pt){} {} {}(0pt,0pt)}
+
+%%Unterste Zeile
+{{ element.d.bottomfill == 'flushbottom' ? ' ' : '%' }} \flushbottom % gleiche Höhe, elastische vertikale Abstände
+{{ element.d.bottomfill == 'raggedbottom' ? ' ' : '%' }} \raggedbottom % wechselnde Höhe, konstante vertikale Abstände
+
+\begin{document}
+%% ==================================
+%% Befehle für die Titelseite
+%% ==================================
+\title{
+%\includegraphics[scale=1.0]{zusatz/logo_a} \\
+{{ element.d.titletext }}
+%\includegraphics[draft=false,scale=0.333]{zusatz/logo_a}
+}
+\author{{ '{' }}{{ element.d.titleautor }}}
+%Datum wird automatisch eingefügt
+\pdfbookmark[1]{Titelseite}{titel}
+\maketitle
+\thispagestyle{plainwfl}
+
+\mbox{}
+
+\vfill
+
+%% ==================================
+%% Die Zusammenfassung
+%% ==================================
+\begin{abstract}\pdfbookmark[1]{Zusammenfassung}{}
+{{ element.d.textzusammenfassung }}
+\end{abstract}
+
+\markleft{ }
+\markright{Inhaltsverzeichnis}
+
+\ABSCHNITTSTRENNER
+\pdfbookmark[1]{\contentsname}{toc}
+\tableofcontents
+\listoffigures
+\listoftables
+\listoffixmes
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ABSCHNITTSTRENNER
+\markright{Allgemeines}
+\include{texteile/allgemeines}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ABSCHNITTSTRENNER
+\appendix
+\markright{Anhang}
+\include{texteile/anhang}
+
+{% set glossar = (element.d.makeglossar == '1' ? '' : '%') %}
+{{ glossar }}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+{{ glossar }}\ABSCHNITTSTRENNER
+{{ glossar }}\markright{Glossar}
+{{ glossar }}\def\glossaryname{Glossar}
+{{ glossar }}\printglossary
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ABSCHNITTSTRENNER
+\markright{Index}
+\renewcommand*{\indexpagestyle}{scrheadings}
+\printindex
+
+{% set biblio = (element.d.makebiblio == '1' ? '' : '%') %}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+{{ biblio }}\ABSCHNITTSTRENNER
+{{ biblio }}\markright{Literaturverzeichnis}
+{{ biblio }}\bibliographystyle{dinat}%[Autor, Jahr]
+{{ biblio }}\bibliographystyle{gerplain} %einfache Zahl
+{{ biblio }}\bibliography{dateiname}
+
+\end{document}
 </pre>

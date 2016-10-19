@@ -5,23 +5,28 @@ namespace Drupal\texgen\Controller;
 use Drupal\Core\Controller\ControllerBase;
 
 /**
- * An example controller.
+ * The main page controller.
  */
 class MainPageController extends ControllerBase {
-
   /**
    * {@inheritdoc}
    */
   public function content() {
     $build = array();
     $build[] = array(
-      '#theme' => 'texgen-page',
+      '#theme' => 'texgen_page',
     );
-    $build[] = array(
-      '#type' => 'texgen_document',
-      '#label' => $this->t('Example Label'),
-      '#description' => $this->t('This is the description text.'),
-    );
+
+    global $_SESSION;
+    if (isset($_SESSION['texgen']['result'])) {
+      drupal_set_message(t('Your document has been created.'));
+
+      $doc = $_SESSION['texgen']['result'];
+      $build[] = array(
+        '#markup' => $doc,
+      );
+
+    }
     return $build;
   }
 
