@@ -1,0 +1,6 @@
+name: LaTeX Generator
+description: Generates sources for a LaTeX document with several options
+package: Custom
+type: module
+version: 8.x-1.0
+core: 8.x

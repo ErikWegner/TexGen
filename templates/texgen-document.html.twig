@@ -1,0 +1,31 @@
+{#
+/**
+ * @file
+ * Default theme implementation to my_element.
+ *
+ * Available variables:
+ * - element: Element that will be rendered.
+ * - element['link'] : a link
+ * - element['description'] : a description
+ * - element['pre_render_addition'] : added during the #pre_render function
+ * - element['#random_number'] : a random number variable, won't be printed with the element.
+ *
+ * @ingroup themeable
+ */
+#}
+ 
+<pre class="brush: latex">%\listfiles % für Fehlersuche
+% Dokumentenklasse und Optionen
+\documentclass[
+  final,      % endgültige Fassung
+% draft,      % Vorschau
+  idxtotoc,   % Index soll im Inhaltsverzeichnis stehen
+% liststotoc, % Abbildungs- und Tabellenverzeichnis sollen im Inhaltsverzeichnis stehen
+% bibtotoc,   % Literaturverzeichnis soll im Inhaltsverzeichnis stehen
+  tocleft,    % Inhaltsverzeichnis nicht einrücken
+% chapterprefix, % »Kapitel« vor Kapitelnummer ausgeben (nur scrreprt und scrbook)
+% appendixprefix, % »Anhang« vor Anhangsnummer ausgeben
+  a4paper,    % Papiergröße A4
+  abstracton, % Zusammenfassung aktivieren
+  titlepage,  % Eine Titelseite erstellen
+</pre>

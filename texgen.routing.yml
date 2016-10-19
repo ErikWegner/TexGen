@@ -1,0 +1,15 @@
+texgen.page:
+  path: '/texgen'
+  defaults:
+    _controller: '\Drupal\texgen\Controller\MainPageController::content'
+    _title: 'LaTeX Generator'
+  requirements:
+    _permission: 'access content'
+
+texgen.doc:
+  path: '/texgen/doc'
+  defaults:
+    _form: '\Drupal\texgen\Form\DocumentForm'
+    _title: 'Document generator'
+  requirements:
+    _permission: 'access content'

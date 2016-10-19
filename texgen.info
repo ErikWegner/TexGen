@@ -1,4 +1,0 @@
-name = LaTeX Generator
-description = Generates sources for a LaTeX document with several options
-version = 7.x-1.0
-core = 7.x
