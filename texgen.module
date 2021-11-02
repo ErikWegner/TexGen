@@ -471,5 +471,5 @@ texgen_commandIfVar("cc", "cc", 4, $form_state['values']) .
 
     $form_state['redirect'] = 'texgen';
 
-    drupal_set_message(t('Your document has been created.'));
+    \Drupal::messenger()->addStatus(t('Your document has been created.'));
 }

@@ -19,7 +19,7 @@ class MainPageController extends ControllerBase {
 
     global $_SESSION;
     if (isset($_SESSION['texgen']['result'])) {
-      drupal_set_message(t('Your document has been created.'));
+      $this->messenger()->addStatus(t('Your document has been created.'));
 
       $doc = $_SESSION['texgen']['result'];
       $build[] = array(

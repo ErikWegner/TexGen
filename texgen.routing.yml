@@ -13,3 +13,11 @@ texgen.doc:
     _title: 'Document generator'
   requirements:
     _permission: 'access content'
+texgen.letter:
+  path: '/texgen/letter'
+  defaults:
+    _form: '\Drupal\texgen\Form\LetterForm'
+    _title: 'Letter generator'
+  requirements:
+    _permission: 'access content'
+
