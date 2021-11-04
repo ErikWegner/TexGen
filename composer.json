@@ -2,5 +2,10 @@
     "name": "erikwegner/texgen",
     "type": "drupal-module",
     "license": "GPL-2.0-or-later",
+    "autoload": {
+        "psr-4": {
+            "Drupal\\texgen\\": "src/"
+        }
+    },
     "require": {}
 }
